@@ -7,6 +7,7 @@ import AddDifficultyPage from "./AddDifficultyPage";
 import AddQuestionPage from "./AddQuestionPage";
 import AddQuestionTypePage from "./AddQuestionTypePage";
 import ListQuestionPage from "./ListQuestionPage";
+import ListStudentsPage from "./ListStudentPage";
 import ComingSoon from "../../Base/ComingSoon"
 
 
@@ -27,7 +28,8 @@ const AdminDashboard = () => {
         return <AddQuestionTypePage />;
       case "ListQuestion":
         return <ListQuestionPage />;
-      
+      case "ListStudents":
+        return <ListStudentsPage />;
       default:
         return <ComingSoon></ComingSoon>;
     }

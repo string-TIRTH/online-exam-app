@@ -90,3 +90,19 @@ export const deleteQuestion = (questionId) => API.post("/question/delete", {
       Authorization: `Bearer ${token}`,
     },
 });
+
+export const getStudentList = (page,limit,search) => API.post("/student/getStudentList", {
+  page,limit,search
+}, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+});
+
+export const updateStudent = (student) => API.post("/student/update", {
+  student
+}, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+});

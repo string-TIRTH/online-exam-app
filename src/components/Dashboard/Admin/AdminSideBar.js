@@ -48,7 +48,7 @@ const AdminSideBar = ({ onPageSelect }) => {
 
                                         <AccordionItem border="none">
                                             <AccordionButton>
-                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center">
+                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={() => onPageSelect("ListStudents")}>
                                                     <Icon as={FaSearch} mr={2} />
                                                     <Text>Search</Text>
                                                 </Box>
