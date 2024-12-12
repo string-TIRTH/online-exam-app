@@ -4,11 +4,12 @@ import Dashboard from "../components/Dashboard/BaseDashboard";
 import ProtectedRoute from "../utils/ProtectedRoutes";
 import ComingSoon from "../components/Base/ComingSoon";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import Navbar from "../components/Dashboard/BaseNavbar";
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/coming-soon" element={<ComingSoon />} />
+      <Route path="/coming-soon" element={<><Navbar/><ComingSoon /></>} />
       <Route
         path="/dashboard"
         element={

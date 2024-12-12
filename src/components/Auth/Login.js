@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, Button, FormControl, FormLabel, Heading, Input, Stack, Alert, AlertIcon } from "@chakra-ui/react";
 import axios from "axios";
+import {login} from "../../services/api";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -20,7 +21,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/login`, { email, password });
+      const response = await login(email,password);
 
       sessionStorage.setItem("token", response.data.token);
       sessionStorage.setItem("role", response.data.role);

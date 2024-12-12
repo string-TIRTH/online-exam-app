@@ -5,9 +5,6 @@ import Navbar from "../Dashboard/BaseNavbar";
 const ComingSoon = () => {
   return (
     <>
-    <Navbar>
-    
-    </Navbar> 
     <div style={{
       display: "flex",
       justifyContent: "center",
