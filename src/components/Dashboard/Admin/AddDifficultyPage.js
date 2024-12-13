@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Box, FormLabel, Input, Button, Select, FormControl, HStack, VStack, useToast,Radio,RadioGroup } from '@chakra-ui/react';
-import {createQuestionDifficulty } from "../../../services/api";
+import React, { useState } from 'react';
+import { Box, FormLabel, Input, Button, FormControl, HStack, VStack, useToast } from '@chakra-ui/react';
+import {questionApis } from "../../../services/api";
 const AddDifficultyPage = () => {
   const [addButtonDisabled,setAddButtonDisabled] = useState(false);
 
@@ -22,7 +22,7 @@ const AddDifficultyPage = () => {
     e.preventDefault();
 
     setAddButtonDisabled(true)
-    await createQuestionDifficulty(formData.difficultyText,formData.difficultyWeight).then(()=>{
+    await questionApis.createQuestionDifficulty(formData.difficultyText,formData.difficultyWeight).then(()=>{
       setAddButtonDisabled(false)
       toast({
         title: 'Question Category Added',
