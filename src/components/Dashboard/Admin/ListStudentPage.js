@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FaTrash } from "react-icons/fa";
 import {
   Box,
   Table,
@@ -23,12 +22,10 @@ import {
   FormControl,
   FormLabel,
   Select,
-  Radio,
   Flex,
-  RadioGroup,
 } from "@chakra-ui/react";
 import Swal from "sweetalert2";
-import { getStudentList,updateStudent } from "../../../services/api";
+import { userApis } from "../../../services/api";
 
 const ListStudentsPage = () => {
   const [students, setStudents] = useState([]);
@@ -47,10 +44,10 @@ const ListStudentsPage = () => {
 
     const fetchStudents = async () => {
       try {
-        const studentResponse = await getStudentList(currentPage, rowsPerPage, searchText);
+        const studentResponse = await userApis.getStudentList(currentPage, rowsPerPage, searchText);
         setTotalStudents(studentResponse.data.itemCount);
-        setStudents(studentResponse.data.items);
-        setFilteredStudents(studentResponse.data.items);
+        setStudents(studentResponse.data.items??[]);
+        setFilteredStudents(studentResponse.data.items??[]);
       } catch (error) {
         console.error("Error fetching students:", error);
       }
@@ -84,7 +81,7 @@ const ListStudentsPage = () => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            // const response = await deleteStudent(userId);
+            // const response = await userApis.deleteStudent(userId);
             const response = {};
             Swal.fire("Deleted!",response.data.message, "success");
             const updatedStudents = students.filter((q) => q.userId !== userId);
@@ -122,7 +119,7 @@ const ListStudentsPage = () => {
 
   const handleSaveChanges = async () => {
     try {
-      await updateStudent(updatedStudent);
+      await userApis.updateStudent(updatedStudent);
       toast({
         title: "Student Updated",
         description: "The student has been updated successfully.",
@@ -157,6 +154,35 @@ const ListStudentsPage = () => {
     border="1px solid #ccc"
     borderRadius="md"   >
       <VStack spacing={4} align="stretch">
+      <HStack justifyContent="space-between" mt={4}>
+  <Select
+    value={rowsPerPage}
+    onChange={(e) => {
+      setRowsPerPage(Number(e.target.value));
+      setCurrentPage(1);
+    }}
+    width="120px"
+  >
+    <option value={5}>5 rows</option>
+    <option value={10}>10 rows</option>
+    <option value={20}>20 rows</option>
+  </Select>
+
+  <Select
+    value={currentPage}
+    onChange={(e) => setCurrentPage(Number(e.target.value))}
+    width="120px"
+  >
+    {Array.from(
+      { length: Math.ceil(totalStudents/ rowsPerPage) },
+      (_, i) => (
+        <option key={i + 1} value={i + 1}>
+          Page {i + 1}
+        </option>
+      )
+    )}
+  </Select>
+</HStack>
         <Input
           placeholder="Search students by userId, mobile number, email, full name"
           value={searchText}
@@ -245,36 +271,6 @@ const ListStudentsPage = () => {
           </ModalContent>
         </Modal>
       )}
-      <HStack justifyContent="space-between" mt={4}>
-  <Select
-    value={rowsPerPage}
-    onChange={(e) => {
-      setRowsPerPage(Number(e.target.value));
-      setCurrentPage(1);
-    }}
-    width="120px"
-  >
-    <option value={5}>5 rows</option>
-    <option value={10}>10 rows</option>
-    <option value={20}>20 rows</option>
-  </Select>
-
-  <Select
-    value={currentPage}
-    onChange={(e) => setCurrentPage(Number(e.target.value))}
-    width="120px"
-  >
-    {Array.from(
-      { length: Math.ceil(totalStudents/ rowsPerPage) },
-      (_, i) => (
-        <option key={i + 1} value={i + 1}>
-          Page {i + 1}
-        </option>
-      )
-    )}
-  </Select>
-</HStack>
-
     </Box>
   );
 };

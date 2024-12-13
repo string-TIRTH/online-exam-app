@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Box, FormLabel, Input, Button, Select, FormControl, HStack, VStack, useToast,Radio,RadioGroup } from '@chakra-ui/react';
-import {createStudentSingle } from "../../../services/api";
+import React, { useState } from 'react';
+import { Box, FormLabel, Input, Button, FormControl, HStack, VStack, useToast } from '@chakra-ui/react';
+import {userApis } from "../../../services/api";
 const AddStudentPage = () => {
   const [addButtonDisabled,setAddButtonDisabled] = useState(false);
 
@@ -24,7 +24,7 @@ const AddStudentPage = () => {
     e.preventDefault();
 
     setAddButtonDisabled(true)
-    await createStudentSingle(formData.fullName, formData.mobileNumber, formData.email, formData.password).then(()=>{
+    await userApis.createStudentSingle(formData.fullName, formData.mobileNumber, formData.email, formData.password).then(()=>{
       setAddButtonDisabled(false)
       toast({
         title: 'Student Added',
