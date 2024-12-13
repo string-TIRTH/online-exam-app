@@ -25,10 +25,10 @@ import {
   Select,
   Radio,
   Flex,
-  RadioGroup,
+  Grid,
 } from "@chakra-ui/react";
 import Swal from "sweetalert2";
-import { getQuestionAssosicateData, getQuestionsList, updateQuestion, deleteOptions, deleteExamples,deleteQuestion } from "../../../services/api";
+import { questionApis } from "../../../services/api";
 
 const ListQuestionsPage = () => {
   const [questions, setQuestions] = useState([]);
@@ -39,12 +39,11 @@ const ListQuestionsPage = () => {
   const [updatedQuestion, setUpdatedQuestion] = useState({});
   const [deletedOptionList, setDeleteOptionList] = useState([]);
   const [deletedExampleList, setDeletedExampleList] = useState([]);
-  const [questionTypes, setQuestionTypes] = useState([]);
   const [questionDifficulties, setQuestionDifficulties] = useState([]);
   const [questionCategories, setQuestionCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [totalQuestions,setTotalQuestions] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(0);
   const [timeoutId, setTimeoutId] = useState(null);
   const toast = useToast();
 
@@ -52,22 +51,20 @@ const ListQuestionsPage = () => {
 
     const fetchQuestions = async () => {
       try {
-        const quesitonResponse = await getQuestionsList(currentPage, rowsPerPage, searchText);
-        const questionAssosicateDataReponse = await getQuestionAssosicateData();
-        setTotalQuestions(quesitonResponse.data.questionCount);
-        console.log(quesitonResponse.data.questionCount)
-        setQuestions(quesitonResponse.data.questions);
-        setFilteredQuestions(quesitonResponse.data.questions);
+        const quesitonResponse = await questionApis.getQuestionsList(currentPage, rowsPerPage, searchText);
+        const questionAssosicateDataReponse = await questionApis.getQuestionAssosicateData();
+        setTotalQuestions(quesitonResponse.data.itemCount);
+        setQuestions(quesitonResponse.data.items ?? []);
+        setFilteredQuestions(quesitonResponse.data.items ?? []);
         setQuestionCategories(questionAssosicateDataReponse.data.categories)
         setQuestionDifficulties(questionAssosicateDataReponse.data.difficulties)
-        setQuestionTypes(questionAssosicateDataReponse.data.questionTypes)
       } catch (error) {
         console.error("Error fetching questions:", error);
       }
     };
 
     fetchQuestions();
-  }, [currentPage,rowsPerPage,searchText]);
+  }, [currentPage, rowsPerPage, searchText]);
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -76,7 +73,7 @@ const ListQuestionsPage = () => {
       clearTimeout(timeoutId);
     }
     const newTimeoutId = setTimeout(() => {
-        
+
     }, 500);
     setTimeoutId(newTimeoutId);
   };
@@ -94,8 +91,8 @@ const ListQuestionsPage = () => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            const response = await deleteQuestion(questionId);
-            Swal.fire("Deleted!",response.data.message, "success");
+            const response = await questionApis.deleteQuestion(questionId);
+            Swal.fire("Deleted!", response.data.message, "success");
             const updatedQuestions = questions.filter((q) => q.questionId !== questionId);
             setQuestions(updatedQuestions);
             setFilteredQuestions(updatedQuestions);
@@ -143,17 +140,20 @@ const ListQuestionsPage = () => {
   };
 
   const handleIsCorrectToggle = (index) => {
-    const updatedOptions = [...updatedQuestion.options];
-    updatedOptions[index].isCorrect = !updatedOptions[index].isCorrect;
-    setUpdatedQuestion((prev) => ({ ...prev, options: updatedOptions }));
-    console.log(questionCategories)
-    console.log(questionDifficulties)
-    console.log(questionTypes)
+    setUpdatedQuestion((prev) => {
+      const updatedOptions = prev.options.map((option, i) => ({
+        ...option,
+        isCorrect: i === index,
+      }));
+      return { ...prev, options: updatedOptions };
+    });
   };
   const handleOptionChange = (index, field, value) => {
-    const updatedOptions = [...updatedQuestion.options];
-    updatedOptions[index][field] = value;
-    setUpdatedQuestion((prev) => ({ ...prev, options: updatedOptions }));
+    setUpdatedQuestion((prev) => {
+      const updatedOptions = [...prev.options];
+      updatedOptions[index] = { ...updatedOptions[index], [field]: value };
+      return { ...prev, options: updatedOptions };
+    });
   };
 
   const handleAddOption = () => {
@@ -168,25 +168,29 @@ const ListQuestionsPage = () => {
     }));
   };
 
-  
+
 
   const handleDeleteOption = (index) => {
     const updatedOptions = [...updatedQuestion.options];
     const [deletedOption] = updatedOptions.splice(index, 1);
     setDeleteOptionList((prev) => [...prev, deletedOption.optionId]);
     setUpdatedQuestion((prev) => ({ ...prev, options: updatedOptions }));
-    console.log(deletedOptionList)
   };
 
   const handleExampleChange = (index, field, value) => {
-    const updatedExamples = [...updatedQuestion.examples];
-    updatedExamples[index][field] = value;
-    setUpdatedQuestion((prev) => ({ ...prev, examples: updatedExamples }));
+    setUpdatedQuestion((prev) => {
+      const updatedExamples = [...prev.examples];
+      updatedExamples[index] = {
+        ...updatedExamples[index],
+        [field]: value,
+      };
+      return { ...prev, examples: updatedExamples };
+    });
   };
 
   const handleAddExample = () => {
     const newExample = {
-      exampleId: "-1", 
+      exampleId: "-1",
       inputText: "",
       outputText: "",
     };
@@ -195,7 +199,7 @@ const ListQuestionsPage = () => {
       examples: [...prev.examples, newExample],
     }));
   };
-  
+
   const handleDeleteExample = (index) => {
     const updatedExamples = [...updatedQuestion.examples];
     const [deletedExample] = updatedExamples.splice(index, 1);
@@ -207,7 +211,7 @@ const ListQuestionsPage = () => {
   };
   const handleSaveChanges = async () => {
     try {
-      await updateQuestion(updatedQuestion);
+      await questionApis.updateQuestion(updatedQuestion);
       toast({
         title: "Question Updated",
         description: "The question has been updated successfully.",
@@ -217,23 +221,23 @@ const ListQuestionsPage = () => {
       });
       console.log(deletedOptionList)
       if (updatedQuestion.questionType.questionTypeText === "MCQ") {
-        const idList = deletedOptionList.filter((id)=> {
-          if(id>0){
+        const idList = deletedOptionList.filter((id) => {
+          if (id > 0) {
             return id
           }
         })
-        if(idList.length!=0)
-          await deleteOptions(updatedQuestion.questionId, idList);
+        if (idList.length !== 0)
+          await questionApis.deleteOptions(updatedQuestion.questionId, idList);
       } else if (updatedQuestion.questionType.questionTypeText === "Programming") {
 
-        const idList = deletedExampleList.filter((id)=> {
-          if(id>0){
+        const idList = deletedExampleList.filter((id) => {
+          if (id > 0) {
             return id
           }
         })
         console.log(deletedExampleList)
-        if(idList.length!=0)
-          await deleteExamples(updatedQuestion.questionId, idList);
+        if (idList.length !== 0)
+          await questionApis.deleteExamples(updatedQuestion.questionId, idList);
       }
       const updatedQuestions = questions.map((q) =>
         q.questionId === updatedQuestion.questionId ? updatedQuestion : q
@@ -258,15 +262,44 @@ const ListQuestionsPage = () => {
   };
 
   return (
-    <Box maxHeight="680px" 
-    overflowY="auto"   
-    p={2}       
-    bg="gray.50"      
-    border="1px solid #ccc"
-    borderRadius="md"   >
+    <Box maxHeight="680px"
+      overflowY="auto"
+      p={2}
+      bg="gray.50"
+      border="1px solid #ccc"
+      borderRadius="md"   >
       <VStack spacing={4} align="stretch">
+        <HStack justifyContent="space-between" mt={4}>
+          <Select
+            value={rowsPerPage}
+            onChange={(e) => {
+              setRowsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+            width="120px"
+          >
+            <option value={5}>5 rows</option>
+            <option value={10}>10 rows</option>
+            <option value={20}>20 rows</option>
+          </Select>
+
+          <Select
+            value={currentPage}
+            onChange={(e) => setCurrentPage(Number(e.target.value))}
+            width="120px"
+          >
+            {Array.from(
+              { length: Math.ceil(totalQuestions / rowsPerPage) },
+              (_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  Page {i + 1}
+                </option>
+              )
+            )}
+          </Select>
+        </HStack>
         <Input
-          placeholder="Search questions by text"
+          placeholder="Search questions by questionId, questionText"
           value={searchText}
           onChange={handleSearch}
         />
@@ -383,51 +416,38 @@ const ListQuestionsPage = () => {
 
                 <Box w="50%">
                   {updatedQuestion.questionType.questionTypeText === "MCQ" ? (
-                    <VStack spacing={4}>
-                      <RadioGroup>
-                        {updatedQuestion.options
-                          .reduce((acc, option, index) => {
-                            if (index % 2 === 0) acc.push([option]);
-                            else acc[acc.length - 1].push(option);
-                            return acc;
-                          }, [])
-                          .map((pair, pairIndex) => (
-                            <HStack key={pairIndex} spacing={4} w="100%">
-                              {pair.map((option, index) => (
-                                <FormControl key={option.optionId} w="45%">
-                                  <FormLabel>Option {pairIndex * 2 + index + 1}</FormLabel>
-                                  <Input
-                                    id={option.optionId}
-                                    value={option.optionText}
-                                    onChange={(e) =>
-                                      handleOptionChange(pairIndex * 2 + index, "optionText", e.target.value)
-                                    }
-                                  />
-                                  <Radio
-                                    value={option.optionId.toString()}
-                                    isChecked={option.isCorrect}
-                                    onChange={() => handleIsCorrectToggle(pairIndex * 2 + index)}
-                                  >
-                                    Correct
-                                  </Radio>
-                                  <Button
-                                    backgroundColor={"red"}
-                                    ml={"50%"}
-                                    width={"2px"}
-                                    height={"20px"}
-                                    onClick={() => handleDeleteOption(pairIndex * 2 + index)}
-                                  >
-                                    <FaTrash style={{ cursor: "pointer", color: "white" }} />
-                                  </Button>
-                                </FormControl>
-                              ))}
-                            </HStack>
-                          ))}
-                      </RadioGroup>
-                      <Button colorScheme="green" onClick={handleAddOption}>
+
+                    <Grid templateColumns="repeat(2, 2fr)" gap={6}>
+                      {updatedQuestion.options.map((option, index) => (
+                        <FormControl key={option.optionId}>
+                          <FormLabel>Option {index + 1}</FormLabel>
+                          <Input
+                            id={option.optionId}
+                            value={option.optionText}
+                            onChange={(e) => handleOptionChange(index, "optionText", e.target.value)}
+                          />
+                          <HStack spacing={4} mt={2}>
+                            <Radio
+                              value={option.optionId.toString()}
+                              isChecked={option.isCorrect}
+                              onChange={() => handleIsCorrectToggle(index)}
+                            >
+                              Correct
+                            </Radio>
+                            <Button
+                              colorScheme="red"
+                              size="sm"
+                              onClick={() => handleDeleteOption(index)}
+                            >
+                              <FaTrash />
+                            </Button>
+                          </HStack>
+                        </FormControl>
+                      ))}
+                      <Button gridColumn="span 2" colorScheme="green" onClick={handleAddOption}>
                         Add Option
                       </Button>
-                    </VStack>
+                    </Grid>
 
                   ) : (
                     <VStack spacing={4}>
@@ -483,35 +503,7 @@ const ListQuestionsPage = () => {
           </ModalContent>
         </Modal>
       )}
-      <HStack justifyContent="space-between" mt={4}>
-  <Select
-    value={rowsPerPage}
-    onChange={(e) => {
-      setRowsPerPage(Number(e.target.value));
-      setCurrentPage(1);
-    }}
-    width="120px"
-  >
-    <option value={5}>5 rows</option>
-    <option value={10}>10 rows</option>
-    <option value={20}>20 rows</option>
-  </Select>
 
-  <Select
-    value={currentPage}
-    onChange={(e) => setCurrentPage(Number(e.target.value))}
-    width="120px"
-  >
-    {Array.from(
-      { length: Math.ceil(totalQuestions/ rowsPerPage) },
-      (_, i) => (
-        <option key={i + 1} value={i + 1}>
-          Page {i + 1}
-        </option>
-      )
-    )}
-  </Select>
-</HStack>
 
     </Box>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, FormLabel, Input, Button, Select, FormControl, HStack, VStack, useToast,Radio,RadioGroup } from '@chakra-ui/react';
-import { getQuestionAssosicateData, createQuestionSingle } from "../../../services/api";
+import { questionApis} from "../../../services/api";
 const AddQuestionPage = () => {
   const [questionType, setQuestionType] = useState(null);
   const [category,setCategory] = useState(null);
@@ -64,7 +64,7 @@ const AddQuestionPage = () => {
   useEffect(() => {
     const fetchOptions = async () => {
       try {
-        const questionAssoDataRes = await getQuestionAssosicateData();
+        const questionAssoDataRes = await questionApis.getQuestionAssosicateData();
         const defaultQuestionType = questionAssoDataRes.data.questionTypes[0].questionTypeText;
         const defaultCategory = questionAssoDataRes.data.categories[0].categoryText;
         const defaultDifficulty = questionAssoDataRes.data.difficulties[0].difficultyText;
@@ -124,7 +124,7 @@ const AddQuestionPage = () => {
     }else{
       setOptions(null);
     }
-    await createQuestionSingle(formData.questionText,category,questionType,difficulty,options,examples).then(()=>{
+    await questionApis.createQuestionSingle(formData.questionText,category,questionType,difficulty,options,examples).then(()=>{
       setAddButtonDisabled(false)
       toast({
         title: 'Question Added',
