@@ -7,14 +7,16 @@ import { BiCategory } from "react-icons/bi";
 import { ImConfused } from "react-icons/im";
 import { MdOutlineTypeSpecimen } from "react-icons/md";
 import { RiQuestionnaireLine } from "react-icons/ri";
+import { FaUsersGear } from "react-icons/fa6";
 const AdminSideBar = ({ onPageSelect }) => {
     return (
         <Box
-            width={{ base: 'full', md: 256 }}
+            width={{ base: 'full', md: 300 }}
             bg="gray.50"
             p={4}
             height="100vh"
             borderRight="1px solid #ddd"
+            overflowY="auto"
         >
             <Accordion allowMultiple>
                 <AccordionItem >
@@ -93,6 +95,40 @@ const AdminSideBar = ({ onPageSelect }) => {
                             </AccordionItem>
                         </Accordion>
                     </AccordionPanel>
+                    <AccordionPanel pb={2}>
+                        <Accordion allowMultiple>
+                            <AccordionItem border="1px" borderRadius={5}>
+                                <AccordionButton>
+                                    <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center">
+                                        <Icon as={FaUsersGear } mr={2} />
+                                        <Text fontWeight="bold">Role</Text>
+                                    </Box>
+                                    <AccordionIcon />
+                                </AccordionButton>
+                                <AccordionPanel pb={2}>
+                                    <Accordion allowMultiple>
+                                        <AccordionItem border="none">
+                                            <AccordionButton>
+                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={() => onPageSelect("AddRole")}>
+                                                    <Icon as={FaUserPlus} mr={2} />
+                                                    <Text>Add</Text>
+                                                </Box>
+                                            </AccordionButton>
+                                        </AccordionItem>
+
+                                        <AccordionItem border="none">
+                                            <AccordionButton>
+                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={() => onPageSelect("ListRoles")}>
+                                                    <Icon as={FaSearch} mr={2} />
+                                                    <Text>Search</Text>
+                                                </Box>
+                                            </AccordionButton>
+                                        </AccordionItem>
+                                    </Accordion>
+                                </AccordionPanel>
+                            </AccordionItem>
+                        </Accordion>
+                    </AccordionPanel>
                 </AccordionItem>
                 <AccordionItem>
                     <AccordionButton>
@@ -159,7 +195,7 @@ const AdminSideBar = ({ onPageSelect }) => {
 
                                         <AccordionItem border="none">
                                             <AccordionButton>
-                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center">
+                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={() => onPageSelect("ListCategory")}>
                                                     <Icon as={FaSearch} mr={2} />
                                                     <Text>Search</Text>
                                                 </Box>
@@ -193,7 +229,7 @@ const AdminSideBar = ({ onPageSelect }) => {
 
                                         <AccordionItem border="none">
                                             <AccordionButton>
-                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center">
+                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={() => onPageSelect("ListDifficulty")}>
                                                     <Icon as={FaSearch} mr={2} />
                                                     <Text>Search</Text>
                                                 </Box>
@@ -227,7 +263,7 @@ const AdminSideBar = ({ onPageSelect }) => {
 
                                         <AccordionItem border="none">
                                             <AccordionButton>
-                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center">
+                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={() => onPageSelect("ListQuestionType")}>
                                                     <Icon as={FaSearch} mr={2} />
                                                     <Text>Search</Text>
                                                 </Box>
