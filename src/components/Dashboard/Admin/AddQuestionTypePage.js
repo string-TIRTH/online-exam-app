@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Box, FormLabel, Input, Button, Select, FormControl, HStack, VStack, useToast,Radio,RadioGroup } from '@chakra-ui/react';
-import {createQuestionType } from "../../../services/api";
+import React, { useState } from 'react';
+import { Box, FormLabel, Input, Button,FormControl, HStack, VStack, useToast} from '@chakra-ui/react';
+import {questionApis } from "../../../services/api";
 const AddQuestionTypePage = () => {
   const [addButtonDisabled,setAddButtonDisabled] = useState(false);
 
@@ -21,7 +21,7 @@ const AddQuestionTypePage = () => {
     e.preventDefault();
 
     setAddButtonDisabled(true)
-    await createQuestionType(formData.questionTypeText).then(()=>{
+    await questionApis.createQuestionType(formData.questionTypeText).then(()=>{
       setAddButtonDisabled(false)
       toast({
         title: 'Question Type Added',
