@@ -25,6 +25,7 @@ const DashboardHome = () => {
         {currentRole==="Admin" && <AdminDashboard/>}
         {currentRole==="Examiner" && <ExaminerDashboard/>}
         {currentRole==="Student" && <StudentDashboard/>}
+        {/* {currentRole==="Guest" && <AdminDashboard/>} */}
       </Box>
     </Box>
   );

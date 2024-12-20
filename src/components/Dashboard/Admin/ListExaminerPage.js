@@ -27,33 +27,33 @@ import {
 import Swal from "sweetalert2";
 import { userApis } from "../../../services/api";
 
-const ListStudentsPage = () => {
-  const [students, setStudents] = useState([]);
-  const [filteredStudents, setFilteredStudents] = useState([]);
+const ListExaminersPage = () => {
+  const [examiners, setExaminers] = useState([]);
+  const [filteredExaminers, setFilteredExaminers] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [updatedStudent, setUpdatedStudent] = useState({});
+  const [selectedExaminer, setSelectedExaminer] = useState(null);
+  const [updatedExaminer, setUpdatedExaminer] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [totalStudents,setTotalStudents] = useState(0);
+  const [totalExaminers,setTotalExaminers] = useState(0);
   const [timeoutId, setTimeoutId] = useState(null);
   const toast = useToast();
 
   useEffect(() => {
 
-    const fetchStudents = async () => {
+    const fetchExaminers = async () => {
       try {
-        const studentResponse = await userApis.getStudentList(currentPage, rowsPerPage, searchText);
-        setTotalStudents(studentResponse.data.itemCount);
-        setStudents(studentResponse.data.items??[]);
-        setFilteredStudents(studentResponse.data.items??[]);
+        const examinerResponse = await userApis.getExaminerList(currentPage, rowsPerPage, searchText);
+        setTotalExaminers(examinerResponse.data.itemCount);
+        setExaminers(examinerResponse.data.items??[]);
+        setFilteredExaminers(examinerResponse.data.items??[]);
       } catch (error) {
-        console.error("Error fetching students:", error);
+        console.error("Error fetching examiners:", error);
       }
     };
 
-    fetchStudents();
+    fetchExaminers();
   }, [currentPage,rowsPerPage,searchText]);
 
   const handleSearch = (e) => {
@@ -81,12 +81,12 @@ const ListStudentsPage = () => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            // const response = await userApis.deleteStudent(userId);
+            // const response = await userApis.deleteExaminer(userId);
             const response = {};
             Swal.fire("Deleted!",response.data.message, "success");
-            const updatedStudents = students.filter((q) => q.userId !== userId);
-            setStudents(updatedStudents);
-            setFilteredStudents(updatedStudents);
+            const updatedExaminers = examiners.filter((q) => q.userId !== userId);
+            setExaminers(updatedExaminers);
+            setFilteredExaminers(updatedExaminers);
           } catch (error) {
             Swal.fire("failed", error, "error");
           }
@@ -95,50 +95,50 @@ const ListStudentsPage = () => {
         }
       });
     } catch (error) {
-      console.error("Error deleting student:", error);
+      console.error("Error deleting examiner:", error);
     }
   };
 
-  const handleUpdate = (student) => {
-    setSelectedStudent(student);
-    setUpdatedStudent({ ...student });
+  const handleUpdate = (examiner) => {
+    setSelectedExaminer(examiner);
+    setUpdatedExaminer({ ...examiner });
     setIsUpdateModalOpen(true);
   };
 
   const handleFieldChange = (field, value) => {
 
 
-    setUpdatedStudent((prev) => {
+    setUpdatedExaminer((prev) => {
       return {
         ...prev,
         [field]: value,
       };
     });
-    console.log(updatedStudent)
+    console.log(updatedExaminer)
   };
 
   const handleSaveChanges = async () => {
     try {
-      await userApis.updateStudent({user:updatedStudent});
+      await userApis.updateExaminer({user:updatedExaminer});
       toast({
-        title: "Student Updated",
-        description: "The student has been updated successfully.",
+        title: "Examiner Updated",
+        description: "The examiner has been updated successfully.",
         status: "success",
         duration: 2000,
         isClosable: true,
       });
-      const updatedStudents = students.map((q) =>
-        q.userId === updatedStudent.userId ? updatedStudent : q
+      const updatedExaminers = examiners.map((q) =>
+        q.userId === updatedExaminer.userId ? updatedExaminer : q
       );
-      setStudents(updatedStudents);
-      setFilteredStudents(updatedStudents);
+      setExaminers(updatedExaminers);
+      setFilteredExaminers(updatedExaminers);
 
       setIsUpdateModalOpen(false);
     } catch (error) {
-      console.error("Error updating student:", error);
+      console.error("Error updating examiner:", error);
       toast({
         title: "Error",
-        description: "Failed to update the student.",
+        description: "Failed to update the examiner.",
         status: "error",
         duration: 2000,
         isClosable: true,
@@ -174,7 +174,7 @@ const ListStudentsPage = () => {
     width="120px"
   >
     {Array.from(
-      { length: Math.ceil(totalStudents/ rowsPerPage) },
+      { length: Math.ceil(totalExaminers/ rowsPerPage) },
       (_, i) => (
         <option key={i + 1} value={i + 1}>
           Page {i + 1}
@@ -184,7 +184,7 @@ const ListStudentsPage = () => {
   </Select>
 </HStack>
         <Input
-          placeholder="Search students by userId, mobile number, email, full name"
+          placeholder="Search examiners by userId, mobile number, email, full name"
           value={searchText}
           onChange={handleSearch}
         />
@@ -192,7 +192,7 @@ const ListStudentsPage = () => {
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>Student Id</Th>
+              <Th>Examiner Id</Th>
               <Th>Full Name</Th>
               <Th>Email</Th>
               <Th>Mobile Number</Th>
@@ -200,23 +200,23 @@ const ListStudentsPage = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {filteredStudents.map((student) => (
-              <Tr key={student.userId}>
-                <Td>{student.userId}</Td>
-                <Td>{student.fullName}</Td>
-                <Td>{student.email}</Td>
-                <Td>{student.mobileNumber}</Td>
+            {filteredExaminers.map((examiner) => (
+              <Tr key={examiner.userId}>
+                <Td>{examiner.userId}</Td>
+                <Td>{examiner.fullName}</Td>
+                <Td>{examiner.email}</Td>
+                <Td>{examiner.mobileNumber}</Td>
                 <Td>
                   <HStack spacing={2}>
                     <Button
                       colorScheme="blue"
-                      onClick={() => handleUpdate(student)}
+                      onClick={() => handleUpdate(examiner)}
                     >
                       Update
                     </Button>
                     <Button
                       colorScheme="red"
-                      onClick={() => handleDelete(student.userId)}
+                      onClick={() => handleDelete(examiner.userId)}
                     >
                       Delete
                     </Button>
@@ -226,14 +226,14 @@ const ListStudentsPage = () => {
             ))}
           </Tbody>
         </Table>
-        {filteredStudents.length === 0 && <Box>No students found.</Box>}
+        {filteredExaminers.length === 0 && <Box>No examiners found.</Box>}
       </VStack>
-      {selectedStudent && (
+      {selectedExaminer && (
         <Modal isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} size="6xl">
           <ModalOverlay />
           <ModalContent maxW="80%" maxH="90%" w="80%" h="auto" p={4}>
             <ModalHeader display="flex" justifyContent="center">
-              Update Student
+              Update Examiner
             </ModalHeader>
             <ModalCloseButton />
             <ModalBody overflowY="auto" >
@@ -242,21 +242,21 @@ const ListStudentsPage = () => {
                   <FormControl>
                     <FormLabel>Full Name</FormLabel>
                     <Input
-                      value={updatedStudent.fullName}
+                      value={updatedExaminer.fullName}
                       onChange={(e) => handleFieldChange("fullName", e.target.value)}
                     />
                   </FormControl>
                   <FormControl>
                     <FormLabel>Email</FormLabel>
                     <Input
-                      value={updatedStudent.email}
+                      value={updatedExaminer.email}
                       onChange={(e) => handleFieldChange("email", e.target.value)}
                     />
                   </FormControl>
                   <FormControl>
                     <FormLabel>Mobile Number</FormLabel>
                     <Input
-                      value={updatedStudent.mobileNumber}
+                      value={updatedExaminer.mobileNumber}
                       onChange={(e) => handleFieldChange("mobileNumber", e.target.value)}
                     />
                   </FormControl>
@@ -275,4 +275,4 @@ const ListStudentsPage = () => {
   );
 };
 
-export default ListStudentsPage;
+export default ListExaminersPage;

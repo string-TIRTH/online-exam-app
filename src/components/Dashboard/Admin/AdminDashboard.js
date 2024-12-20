@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import AdminSideBar from "./AdminSideBar";
 import AddStudentPage from "./AddStudentPage";
+import AddExaminerPage from "./AddExaminerPage";
+import AddExamPage from "./AddExamPage";
 import AddRolePage from "./AddRolePage";
 import AddCategoryPage from "./AddCategoryPage";
 import AddDifficultyPage from "./AddDifficultyPage";
@@ -9,16 +11,17 @@ import AddQuestionPage from "./AddQuestionPage";
 import AddQuestionTypePage from "./AddQuestionTypePage";
 import ListQuestionPage from "./ListQuestionPage";
 import ListStudentsPage from "./ListStudentPage";
+import ListExaminersPage from "./ListExaminerPage";
 import ListQuestionTypePage from "./ListQuestionTypePage";
 import ListCategoryPage from "./ListCategoryPage";
 import ListDifficultyPage from "./ListDifficultyPage";
 import ListRolesPage from "./ListRolePage";
+import ListExamsPage from "./ListExamPage"
+import ListResultsPage from "./ListResultPage";
 
 import ComingSoon from "../../Base/ComingSoon"
-
-
 const AdminDashboard = () => {
-  const [selectedPage, setSelectedPage] = useState("ManageStudent");
+  const [selectedPage, setSelectedPage] = useState("AddStudent");
 
   const renderPage = () => {
     switch (selectedPage) {
@@ -26,6 +29,11 @@ const AdminDashboard = () => {
         return <AddStudentPage />;
       case "ListStudents":
         return <ListStudentsPage />;
+      case "AddExaminer":
+        return <AddExaminerPage />;
+      case "ListExaminers":
+        return <ListExaminersPage />;
+
       case "AddRole":
         return <AddRolePage />;
       case "ListRoles":
@@ -46,6 +54,12 @@ const AdminDashboard = () => {
         return <AddQuestionTypePage />;
       case "ListQuestionType":
         return <ListQuestionTypePage />;
+      case "AddExam":
+        return <AddExamPage />;
+      case "ListExam":
+        return <ListExamsPage />;
+      case "ListResult":
+        return <ListResultsPage />;
 
 
       default:

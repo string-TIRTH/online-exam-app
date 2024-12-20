@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Box, FormLabel, Input, Button, FormControl, HStack, VStack, useToast } from '@chakra-ui/react';
 import {userApis } from "../../../services/api";
-const AddRolePage = () => {
+const AddExaminerPage = () => {
   const [addButtonDisabled,setAddButtonDisabled] = useState(false);
 
   const [formData, setFormData] = useState({
-    role: '',
+    fullName: '',
+    mobileNumber: '',
+    email: '',
+    password: ''
   });
   const toast = useToast();
 
@@ -21,23 +24,30 @@ const AddRolePage = () => {
     e.preventDefault();
 
     setAddButtonDisabled(true)
-    await userApis.createRole(formData.role).then(()=>{
+    await userApis.createExaminerSingle(formData.fullName, formData.mobileNumber, formData.email, formData.password).then(()=>{
       setAddButtonDisabled(false)
       toast({
-        title: ' Role Added',
-        description: 'New question role added successfully.',
+        title: 'Examiner Added',
+        description: 'New examiner added successfully.',
         status: 'success',
         duration: 1000,
         isClosable: true,
       });
       setFormData({
-        role: '',
+        fullName: '',
+        mobileNumber: '',
+        email: '',
+        password: ''
       });
     });
   };
 
   const fields = [
-    { name: 'role', label: 'Role Name', type: 'text', isRequired: true }
+    { name: 'fullName', label: 'Full Name', type: 'text', isRequired: true },
+    { name: 'mobileNumber', label: 'Mobile Number', type: 'text', isRequired: true },
+    { name: 'email', label: 'Email', type: 'text', isRequired: true },
+    { name: 'password', label: 'Password', type: 'text', isRequired: true },
+    
   ];
 
   return (
@@ -62,7 +72,7 @@ const AddRolePage = () => {
 
           <HStack spacing={4} justify="flex-end" mt={4}>
             <Button type="submit" colorScheme="blue" disabled={addButtonDisabled}>
-              Add Role
+              Add Examiner
             </Button>
           </HStack>
         </VStack>
@@ -71,4 +81,4 @@ const AddRolePage = () => {
   );
 };
 
-export default AddRolePage;
+export default AddExaminerPage;

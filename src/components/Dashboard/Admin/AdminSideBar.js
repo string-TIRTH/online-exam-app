@@ -7,6 +7,8 @@ import { BiCategory } from "react-icons/bi";
 import { ImConfused } from "react-icons/im";
 import { MdOutlineTypeSpecimen } from "react-icons/md";
 import { RiQuestionnaireLine } from "react-icons/ri";
+import { TbReportAnalytics } from "react-icons/tb";
+
 import { FaUsersGear } from "react-icons/fa6";
 const AdminSideBar = ({ onPageSelect }) => {
     return (
@@ -75,7 +77,7 @@ const AdminSideBar = ({ onPageSelect }) => {
                                     <Accordion allowMultiple>
                                         <AccordionItem border="none">
                                             <AccordionButton>
-                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center">
+                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={()=>onPageSelect("AddExaminer")}>
                                                     <Icon as={FaUserPlus} mr={2} />
                                                     <Text>Add</Text>
                                                 </Box>
@@ -84,7 +86,7 @@ const AdminSideBar = ({ onPageSelect }) => {
 
                                         <AccordionItem border="none">
                                             <AccordionButton>
-                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center">
+                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={()=>onPageSelect("ListExaminers")}>
                                                     <Icon as={FaSearch} mr={2} />
                                                     <Text>Search</Text>
                                                 </Box>
@@ -287,7 +289,7 @@ const AdminSideBar = ({ onPageSelect }) => {
                         <Accordion allowMultiple>
                             <AccordionItem border="1px" borderRadius={5}>
                                 <AccordionButton>
-                                    <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center">
+                                    <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" >
                                         <Icon as={LuMessageCircleQuestion} mr={2} />
                                         <Text fontWeight="bold">Exam</Text>
                                     </Box>
@@ -297,7 +299,7 @@ const AdminSideBar = ({ onPageSelect }) => {
                                     <Accordion allowMultiple>
                                         <AccordionItem border="none">
                                             <AccordionButton>
-                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center">
+                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={()=>onPageSelect("AddExam")}>
                                                     <Icon as={FaUserPlus} mr={2} />
                                                     <Text>Add</Text>
                                                 </Box>
@@ -306,43 +308,17 @@ const AdminSideBar = ({ onPageSelect }) => {
 
                                         <AccordionItem border="none">
                                             <AccordionButton>
-                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center">
+                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={()=>onPageSelect("ListExam")}>
                                                     <Icon as={FaSearch} mr={2} />
                                                     <Text>Search</Text>
                                                 </Box>
                                             </AccordionButton>
                                         </AccordionItem>
-                                    </Accordion>
-                                </AccordionPanel>
-                            </AccordionItem>
-                        </Accordion>
-                    </AccordionPanel>
-                    <AccordionPanel pb={2}>
-                        <Accordion allowMultiple>
-                            <AccordionItem border="1px" borderRadius={5}>
-                                <AccordionButton>
-                                    <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center">
-                                        <Icon as={BiCategory} mr={2} />
-                                        <Text fontWeight="bold">Exam Questions</Text>
-                                    </Box>
-                                    <AccordionIcon />
-                                </AccordionButton>
-                                <AccordionPanel pb={2}>
-                                    <Accordion allowMultiple>
                                         <AccordionItem border="none">
                                             <AccordionButton>
-                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center">
-                                                    <Icon as={FaUserPlus} mr={2} />
-                                                    <Text>Add</Text>
-                                                </Box>
-                                            </AccordionButton>
-                                        </AccordionItem>
-
-                                        <AccordionItem border="none">
-                                            <AccordionButton>
-                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center">
-                                                    <Icon as={FaSearch} mr={2} />
-                                                    <Text>Search</Text>
+                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={()=>onPageSelect("ListResult")}>
+                                                    <Icon as={TbReportAnalytics } mr={2} />
+                                                    <Text>View Result</Text>
                                                 </Box>
                                             </AccordionButton>
                                         </AccordionItem>

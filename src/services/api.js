@@ -147,9 +147,125 @@ export const questionApis = {
   }),
 }
 
+export const examApis = {
+  getPassingCriteria:() => API.get("/exam/getPassingCriteria",  {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  
+  }),
+  createExam:({examCode,examDate,examStartTime,examEndTime,examDurationInMinutes,passingCriteria,passingValue,mcqQuestions,proQuestions}) => API.post("/exam/create", {
+    examCode,examDate,examStartTime,examEndTime,examDurationInMinutes,passingCriteria,passingValue,mcqQuestions,proQuestions
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  
+  }),
+  getExamList:(page,limit,search) => API.post("/exam/getExamList", {
+    page,limit,search
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  }),
+  updateExam:(exam) => API.post("/exam/update", {
+    exam
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  }),
+  deleteExam:(examId) => API.post("/exam/delete", {
+    examId
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  }),
+  getExamQuestionByExamId:(id) => API.post("/exam/getExamQuestionByExamId", {
+    id
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  }),
+  getExamQuestionByCategoryAndQuestionType:(categoryId,questionTypeId,examId) => API.post("/exam/getExamQuestionByCategoryAndQuestionType", {
+    categoryId,questionTypeId,examId
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  }),
+  replaceExamQuestions:({examId,oldExamQuestionId,newQuestionId}) => API.post("/exam/replaceExamQuestions", {
+    examId,oldExamQuestionId,newQuestionId
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  }),
+  updateExamQuestion:(examQuestion) => API.post("/exam/updateExamQuestion", {
+    examQuestion
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  }),
+  deleteExamQuestion:(examQuestionId) => API.post("/exam/deleteExamQuestion", {
+    examQuestionId
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  }),
+  getExamQuestionsForExam:(examCode) => API.post("/exam/getExamQuestions", {
+    examCode
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  }),
+  submitQuestionOption:(questionSubmissionId,optionId,statusId) => API.post("/exam/submitQuestionOption", {
+    questionSubmissionId,optionId,statusId
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  }),
+  submitProgrammingQuestion:(programmingSubmissionId,submittedCode) => API.post("/exam/submitProgrammingQuestion", {
+    programmingSubmissionId,submittedCode
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      
+  }),
+  submitExam:(examSubmissionId) => API.post("/exam/submitExam", {
+    examSubmissionId
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      
+  }),
+  getExamResultDetails:(page,limit,search) => API.post("/exam/getExamResultDetails", {
+    page,limit,search
+    },{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }),
+  getExamSubmissions:(examId,page,limit,search) => API.post("/exam/getExamSubmissions", {
+    examId,page,limit,search
+    },{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }),
+}
 
 export const userApis = {
-  createStudentSingle:(fullName, mobileNumber, email, password) => API.post("/student/register/single", {
+  createStudentSingle:(fullName, mobileNumber, email, password) => API.post("/user/student/register/single", {
     fullName, mobileNumber, email, password
   }, {
       headers: {
@@ -157,7 +273,7 @@ export const userApis = {
       },
   
   }),
-   getStudentList:(page,limit,search) => API.post("/student/getStudentList", {
+   getStudentList:(page,limit,search) => API.post("/user/getStudentList", {
     page,limit,search
   }, {
       headers: {
@@ -165,8 +281,31 @@ export const userApis = {
       },
   }),
   
-   updateStudent:(student) => API.post("/student/update", {
-    student
+   updateStudent:({user}) => API.post("/user/student/update", {
+    user
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  }),
+  createExaminerSingle:(fullName, mobileNumber, email, password) => API.post("/user/examiner/register/single", {
+    fullName, mobileNumber, email, password
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  
+  }),
+   getExaminerList:(page,limit,search) => API.post("/user/getExaminerList", {
+    page,limit,search
+  }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+  }),
+  
+   updateExaminer:({user}) => API.post("/user/examiner/update", {
+    user
   }, {
       headers: {
         Authorization: `Bearer ${token}`,
