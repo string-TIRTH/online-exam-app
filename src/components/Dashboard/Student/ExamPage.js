@@ -34,6 +34,29 @@ const ExamPage = () => {
     const fetchQuestions = async () => {
       try {
         const getExamQuestionRes = await examApis.getExamQuestionsForExam(examCode);
+        const status = getExamQuestionRes.data.status;
+        const code = getExamQuestionRes.data.code;
+        console.log(getExamQuestionRes.code);
+        switch(code){
+          case 1:
+            break;
+          case 2:
+            Swal.fire(status, "Exam Finished", "info");
+            setIsExamStarted(false); 
+            break;
+          case 3:
+            Swal.fire(status, "Exam Already Submitted", "info");
+            setIsExamStarted(false); 
+            break;
+          case 4:
+            Swal.fire(status, "Some Thing Went Wrong", "error");
+            setIsExamStarted(false); 
+            break;
+          case 5:
+            Swal.fire(status, "Server Error", "error");
+            setIsExamStarted(false); 
+            break;
+        }
         const questions = getExamQuestionRes.data.questions || {};
         setMcqQuestions(questions.questionsMCQ || []);
         setProgrammingQuestions(questions.questionsPro || []);
@@ -63,7 +86,7 @@ const ExamPage = () => {
   }, [isExamStarted]);
 
   useEffect(() => {
-    if (isExamStarted) {
+    if (isExamStarted && mcqQuestions.length > 0) {
       const timer = setInterval(() => {
         setTimeRemaining((prev) => {
           if (prev <= 0) {
@@ -121,7 +144,6 @@ const handleNavigation = async (direction) => {
     const nextIndex = direction === "next" ? Math.min(currentQuestionIndex + 1, questions.length - 1): Math.max(currentQuestionIndex - 1, 0);
 
     setCurrentQuestionIndex(nextIndex)
-    console.log(submittedCode[currentQuestionIndex]);
     if(currentSection === "Programming"){
       await examApis.submitProgrammingQuestion(programmingQuestions[currentQuestionIndex].programmingSubmissionId,submittedCode[currentQuestionIndex]);
     }
@@ -152,9 +174,7 @@ const handleNavigation = async (direction) => {
   }
 };
 const handleExamCodeChange = (e) => {
-  console.log(e); // Inspect the event object
   const value = e?.target?.value || ""; 
-  console.log("Value:", value); // Check the value
   setExamCode(value);
 }
 

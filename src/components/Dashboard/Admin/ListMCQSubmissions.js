@@ -7,7 +7,6 @@ import {
     Tr,
     Th,
     Td,
-    Button,
     Input,
     VStack,
     HStack,
@@ -26,7 +25,8 @@ const ListMCQSubmission = (data) => {
     useEffect(() => {
         const fetchResults = async () => {
             try {
-                const resultResponse = await examApis.getMCQSubmissions(data.examId,currentPage, rowsPerPage, searchText);
+                console.log("data.examSubmissionId", data.examSubmissionId);
+                const resultResponse = await examApis.getMCQSubmissions(data.examSubmissionId,currentPage, rowsPerPage, searchText);
                 setTotalResults(resultResponse.data.itemCount);
                 setFilteredResults(resultResponse.data.items ?? []);
             } catch (error) {
@@ -86,7 +86,7 @@ const ListMCQSubmission = (data) => {
                     </Select>
                 </HStack>
                 <Input
-                    placeholder="Search exams by examSubmissionId"
+                    placeholder="Search submissions by questionSubmissionId"
                     value={searchText}
                     onChange={handleSearch}
                 />
@@ -95,31 +95,19 @@ const ListMCQSubmission = (data) => {
                     <Thead>
                         <Tr>
                             <Th>Question Submission Id</Th>
-                            <Th>Question Id</Th>
                             <Th>Question Text</Th>
                             <Th>Selected Option</Th>
                             <Th>Is Correct</Th>
-                            <Th textAlign={"center"}>Actions</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
                         {filteredResults.map((result) => (
                             
-                            <Tr key={result.examSubmissionId}>
-                                <Td>{result.examSubmissionId}</Td>
-                                <Td>{result.studentName}</Td>
-                                <Td>{result.studentEmail}</Td>
-                                <Td>{result.scoredMarks}</Td>
-                                <Td>{result.completedInMinutes}</Td>
-                                <Td justifyItems={"center"}>
-                                    <HStack spacing={2}>
-                                        <Button
-                                            colorScheme="blue"
-                                        >
-                                            View Submissions
-                                        </Button>
-                                    </HStack>
-                                </Td>
+                            <Tr key={result.questionSubmissionId}>
+                                <Td>{result.questionSubmissionId}</Td>
+                                <Td>{result.questionText}</Td>
+                                <Td>{result.selectedOptionText}</Td>
+                                <Td color={result.isCorrect===true?"green.500":"red.500"} >{result.isCorrect===true?"True":"False"}</Td>
                             </Tr>
                             
                         ))}

@@ -262,6 +262,27 @@ export const examApis = {
       Authorization: `Bearer ${token}`,
     },
   }),
+  getMCQSubmissions:(examSubmissionId,page,limit,search) => API.post("/exam/getMCQSubmissions", {
+    examSubmissionId,page,limit,search
+    },{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }),
+  getProSubmissions:(examSubmissionId,page,limit,search) => API.post("/exam/getProSubmissions", {
+    examSubmissionId,page,limit,search
+    },{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }),
+  submitCodeReview:(programmingSubmissionId,isCorrect) => API.post("/exam/submitCodeReview", {
+    programmingSubmissionId,isCorrect
+    },{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }),
 }
 
 export const userApis = {
