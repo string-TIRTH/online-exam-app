@@ -44,9 +44,9 @@ const AddExaminerPage = () => {
 
   const fields = [
     { name: 'fullName', label: 'Full Name', type: 'text', isRequired: true },
-    { name: 'mobileNumber', label: 'Mobile Number', type: 'text', isRequired: true },
-    { name: 'email', label: 'Email', type: 'text', isRequired: true },
-    { name: 'password', label: 'Password', type: 'text', isRequired: true },
+    { name: 'mobileNumber', label: 'Mobile Number', type: 'number', isRequired: true },
+    { name: 'email', label: 'Email', type: 'email', isRequired: true },
+    { name: 'password', label: 'Password', type: 'password', isRequired: true},
     
   ];
 
@@ -57,15 +57,16 @@ const AddExaminerPage = () => {
           {fields.map((field, index) => (
             <FormControl key={index} isRequired={field.isRequired}>
               <FormLabel htmlFor={field.name}>{field.label}</FormLabel>
-              {field.type === 'text' && (
+              
                 <Input
                   id={field.name}
                   name={field.name}
+                  type={field.type}
                   value={formData[field.name]}
                   onChange={handleInputChange}
                   placeholder={`Enter ${field.label}`}
                 />
-              )}
+             
             </FormControl>
           ))}
           

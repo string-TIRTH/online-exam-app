@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import {
     Box,
     Table,
@@ -21,8 +21,11 @@ const ListMCQSubmission = (data) => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [totalResults, setTotalResults] = useState(0);
     const [timeoutId, setTimeoutId] = useState(null);
+    const isMounted = useRef(false);
 
     useEffect(() => {
+      if (!isMounted.current) {
+        isMounted.current = true;
         const fetchResults = async () => {
             try {
                 console.log("data.examSubmissionId", data.examSubmissionId);
@@ -34,6 +37,7 @@ const ListMCQSubmission = (data) => {
             }
         };
         fetchResults();
+    }
     }, [currentPage, rowsPerPage, searchText]);
 
     const handleSearch = (e) => {

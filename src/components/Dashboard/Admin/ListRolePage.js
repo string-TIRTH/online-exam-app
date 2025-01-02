@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Box,
   Table,
@@ -39,9 +39,11 @@ const ListRolesPage = () => {
   const [totalRoles, setTotalRoles] = useState(0);
   const [timeoutId, setTimeoutId] = useState(null);
   const toast = useToast();
+  const isMounted = useRef(false);
 
   useEffect(() => {
-
+    if (!isMounted.current) {
+      isMounted.current = true;
     const fetchRoles = async () => {
       try {
         const roleResponse = await userApis.getRoleList(currentPage, rowsPerPage, searchText);
@@ -54,6 +56,7 @@ const ListRolesPage = () => {
     };
 
     fetchRoles();
+    }
   }, [currentPage, rowsPerPage, searchText]);
 
   const handleSearch = (e) => {

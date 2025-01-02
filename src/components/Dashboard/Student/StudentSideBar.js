@@ -31,14 +31,6 @@ const StudentSideBar = ({ onPageSelect }) => {
                                 </Box>
                             </AccordionButton>
                         </AccordionItem>
-                        <AccordionItem border="none">
-                            <AccordionButton>
-                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={() => onPageSelect("ExamHistory")}>
-                                    <Icon as={GoHistory} mr={2} />
-                                    <Text>History</Text>
-                                </Box>
-                            </AccordionButton>
-                        </AccordionItem>
                     </AccordionPanel>
                 </AccordionItem>
             </Accordion>

@@ -5,6 +5,7 @@ import ProtectedRoute from "../utils/ProtectedRoutes";
 import ComingSoon from "../components/Base/ComingSoon";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Navbar from "../components/Dashboard/BaseNavbar";
+import ExamPage from "../components/Dashboard/Student/ExamPage";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -15,6 +16,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/exam"
+        element={
+          <ProtectedRoute>
+            <ExamPage />
           </ProtectedRoute>
         }
       />

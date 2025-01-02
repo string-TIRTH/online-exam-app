@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+
 import {
   Box,
   Table,
@@ -39,9 +40,12 @@ const ListQuestionTypesPage = () => {
   const [totalQuestionTypes, setTotalQuestionTypes] = useState(0);
   const [timeoutId, setTimeoutId] = useState(null);
   const toast = useToast();
+  const isMounted = useRef(false);
 
+  
   useEffect(() => {
-
+    if (!isMounted.current) {
+      isMounted.current = true;
     const fetchQuestionTypes = async () => {
       try {
         const questionTypeResponse = await questionApis.getQuestionTypeList(currentPage, rowsPerPage, searchText);
@@ -54,6 +58,7 @@ const ListQuestionTypesPage = () => {
     };
 
     fetchQuestionTypes();
+  }
   }, [currentPage, rowsPerPage, searchText]);
 
   const handleSearch = (e) => {

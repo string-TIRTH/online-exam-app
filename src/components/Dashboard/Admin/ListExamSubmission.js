@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import {
     Box,
     Table,
@@ -31,7 +31,11 @@ const ListExamSubmission = (data) => {
     const [totalMarks, setTotalMarks] = useState(0);
     const [totalMcqQuestions, setTotalMcqQuestions] = useState(0);
     const [totalProgrammingQuestions, setTotalProgrammingQuestions] = useState(0);
-    useEffect(() => {
+    const isMounted = useRef(false);
+
+  useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
         const fetchResults = async () => {
             try {
                 const resultResponse = await examApis.getExamSubmissions(data.examId, currentPage, rowsPerPage, searchText);
@@ -45,6 +49,7 @@ const ListExamSubmission = (data) => {
             }
         };
         fetchResults();
+    }
     }, [currentPage, rowsPerPage, searchText]);
 
     const handleSearch = (e) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import {
   Box,
   Table,
@@ -40,7 +40,11 @@ const ListExaminersPage = () => {
   const [timeoutId, setTimeoutId] = useState(null);
   const toast = useToast();
 
+  const isMounted = useRef(false);
+
   useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
 
     const fetchExaminers = async () => {
       try {
@@ -54,6 +58,7 @@ const ListExaminersPage = () => {
     };
 
     fetchExaminers();
+  }
   }, [currentPage,rowsPerPage,searchText]);
 
   const handleSearch = (e) => {

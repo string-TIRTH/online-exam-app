@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import {
     Box,
     Table,
@@ -34,7 +34,11 @@ const ListProSubmission = (data) => {
     const [submittedCode, setSubmittedCode] = useState("");
     const [isCodeModalOpen, setIsCodeModalOpen] = useState(false);
     const [programmingSubmissionId, setProgrammingSubmissionId] = useState("");
+    const isMounted = useRef(false);
+
     useEffect(() => {
+      if (!isMounted.current) {
+        isMounted.current = true;
         const fetchResults = async () => {
             try {
                 const resultResponse = await examApis.getProSubmissions(data.examSubmissionId, currentPage, rowsPerPage, searchText);
@@ -45,6 +49,7 @@ const ListProSubmission = (data) => {
             }
         };
         fetchResults();
+    }
     }, [currentPage, rowsPerPage, searchText]);
 
     const handleSearch = (e) => {

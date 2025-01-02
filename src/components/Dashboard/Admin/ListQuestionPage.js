@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import { FaTrash } from "react-icons/fa";
 import {
   Box,
@@ -46,8 +46,11 @@ const ListQuestionsPage = () => {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [timeoutId, setTimeoutId] = useState(null);
   const toast = useToast();
+  const isMounted = useRef(false);
 
   useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
 
     const fetchQuestions = async () => {
       try {
@@ -64,6 +67,7 @@ const ListQuestionsPage = () => {
     };
 
     fetchQuestions();
+  }
   }, [currentPage, rowsPerPage, searchText]);
 
   const handleSearch = (e) => {

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+
 import {
   Box,
   Table,
@@ -38,10 +39,13 @@ const ListStudentsPage = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalStudents,setTotalStudents] = useState(0);
   const [timeoutId, setTimeoutId] = useState(null);
+  const isMounted = useRef(false);
   const toast = useToast();
 
   useEffect(() => {
-
+    if (!isMounted.current) {
+      isMounted.current = true;
+  
     const fetchStudents = async () => {
       try {
         const studentResponse = await userApis.getStudentList(currentPage, rowsPerPage, searchText);
@@ -54,6 +58,7 @@ const ListStudentsPage = () => {
     };
 
     fetchStudents();
+  }
   }, [currentPage,rowsPerPage,searchText]);
 
   const handleSearch = (e) => {
@@ -81,8 +86,7 @@ const ListStudentsPage = () => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            // const response = await userApis.deleteStudent(userId);
-            const response = {};
+            const response = await userApis.deleteStudent(userId);
             Swal.fire("Deleted!",response.data.message, "success");
             const updatedStudents = students.filter((q) => q.userId !== userId);
             setStudents(updatedStudents);
@@ -243,19 +247,26 @@ const ListStudentsPage = () => {
                     <FormLabel>Full Name</FormLabel>
                     <Input
                       value={updatedStudent.fullName}
+                      isRequired={true}
+                       type="text"
                       onChange={(e) => handleFieldChange("fullName", e.target.value)}
                     />
                   </FormControl>
                   <FormControl>
                     <FormLabel>Email</FormLabel>
                     <Input
+                      type="email"
                       value={updatedStudent.email}
+                      isRequired={true}
                       onChange={(e) => handleFieldChange("email", e.target.value)}
                     />
                   </FormControl>
                   <FormControl>
                     <FormLabel>Mobile Number</FormLabel>
                     <Input
+                    type="number"
+                    isRequired={true}
+
                       value={updatedStudent.mobileNumber}
                       onChange={(e) => handleFieldChange("mobileNumber", e.target.value)}
                     />
@@ -264,7 +275,7 @@ const ListStudentsPage = () => {
               </Flex>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="blue" onClick={handleSaveChanges}>
+              <Button type="submit" colorScheme="blue" onClick={handleSaveChanges}>
                 Save Changes
               </Button>
             </ModalFooter>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
     Box,
     Table,
@@ -26,8 +26,10 @@ const ListResultsPage = () => {
     const [timeoutId, setTimeoutId] = useState(null);
     const [examId,setExamId] = useState("");
     const [isExamResultSelected,setIsExamResultSelected] = useState(false);
-
+    const isMounted = useRef(false);
     useEffect(() => {
+        if (!isMounted.current) {
+            isMounted.current = true;
         const fetchResults = async () => {
             try {
                 const resultResponse = await examApis.getExamResultDetails(currentPage, rowsPerPage, searchText);
@@ -38,6 +40,7 @@ const ListResultsPage = () => {
             }
         };
         fetchResults();
+    }
     }, [currentPage, rowsPerPage, searchText]);
 
     const handleSearch = (e) => {
