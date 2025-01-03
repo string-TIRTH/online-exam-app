@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import AdminSideBar from "./AdminSideBar";
 import AddStudentPage from "./AddStudentPage";
+import AddStudentBulkPage from "./AddStudentBulkPage";
 import AddExaminerPage from "./AddExaminerPage";
 import AddExamPage from "./AddExamPage";
 import AddRolePage from "./AddRolePage";
 import AddCategoryPage from "./AddCategoryPage";
 import AddDifficultyPage from "./AddDifficultyPage";
 import AddQuestionPage from "./AddQuestionPage";
+import AddQuestionBulkPage from "./AddQuestionBulkPage";
 import AddQuestionTypePage from "./AddQuestionTypePage";
 import ListQuestionPage from "./ListQuestionPage";
 import ListStudentsPage from "./ListStudentPage";
@@ -27,6 +29,8 @@ const AdminDashboard = () => {
     switch (selectedPage) {
       case "AddStudent":
         return <AddStudentPage />;
+      case "AddStudentBulk":
+        return <AddStudentBulkPage />;
       case "ListStudents":
         return <ListStudentsPage />;
       case "AddExaminer":
@@ -40,6 +44,8 @@ const AdminDashboard = () => {
         return <ListRolesPage />;
       case "AddQuestion":
         return <AddQuestionPage />
+      case "AddQuestionBulk":
+        return <AddQuestionBulkPage />
       case "ListQuestion":
         return <ListQuestionPage />;
       case "AddCategory":

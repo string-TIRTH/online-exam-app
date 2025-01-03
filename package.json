@@ -6,6 +6,7 @@
     "@chakra-ui/react": "^2.10.4",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
+    "@fingerprintjs/fingerprintjs": "^4.5.1",
     "@monaco-editor/react": "^4.6.0",
     "axios": "^1.7.9",
     "cra-template": "1.2.0",

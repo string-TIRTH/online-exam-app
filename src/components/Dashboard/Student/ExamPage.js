@@ -4,21 +4,27 @@ import {
     Button,
     Grid,
     HStack,
+    Icon,
     Radio,
     RadioGroup,
     Stack,
     Text,
+    Spacer,
     VStack,
 } from "@chakra-ui/react";
 import MonacoEditor from "@monaco-editor/react";
 import { examApis } from "../../../services/api";
 import PreventCopyPaste from "./PreventCopyPaste";
 import Swal from "sweetalert2";
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import ExamTimer from "./ExamTimer";
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import { LuFlagTriangleRight } from "react-icons/lu";
+
 
 const ExamPage = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOptions, setSelectedOptions] = useState({});
     const [submittedCode, setSubmittedCode] = useState({});
@@ -30,6 +36,21 @@ const ExamPage = () => {
     const [currentSection, setCurrentSection] = useState("MCQ");
     const [examSubmissionId, setExamSubmissionId] = useState(null);
     const [examCode, setExamCode] = useState(location.state.examCode);
+
+    const getDeviceFingerprint = async () => {
+        const fp = await FingerprintJS.load();
+        const result = await fp.get({
+            excludes: {
+                userAgent: true,
+                screenResolution: true,
+                availableScreenResolution: true,
+                ip: true,
+            }
+        });
+        console.log(result.visitorId);
+        return result.visitorId;
+  };
+
     useEffect(() => {
         const enableFullscreen = async () => {
             if (document.fullscreenElement === null) {
@@ -43,7 +64,7 @@ const ExamPage = () => {
         enableFullscreen();
         const fetchQuestions = async () => {
             try {
-                const getExamQuestionRes = await examApis.getExamQuestionsForExam(examCode);
+                const getExamQuestionRes = await examApis.getExamQuestionsForExam(examCode, await getDeviceFingerprint());
                 const status = getExamQuestionRes.data.status;
                 const code = getExamQuestionRes.data.code;
                 console.log(getExamQuestionRes.code);
@@ -95,6 +116,7 @@ const ExamPage = () => {
         (isExamStarted && fetchQuestions());
     }, [isExamStarted]);
 
+    
 
     const handleEditorChange = (value) => {
         setSubmittedCode({
@@ -125,6 +147,16 @@ const ExamPage = () => {
             ...selectedOptions,
             [currentQuestionIndex]: parseInt(optionId),
         });
+        setMcqQuestions((prev) => {
+            const updatedQuestions = [...prev];
+            updatedQuestions[currentQuestionIndex] = {
+                ...updatedQuestions[currentQuestionIndex],
+                questionSubmissionStatus: {
+                    questionSubmissionStatusId: 1,
+                },
+            };
+            return updatedQuestions;
+        });
     };
 
     const handleNavigation = async (direction) => {
@@ -152,7 +184,8 @@ const ExamPage = () => {
                 if (result.isConfirmed) {
                     await examApis.submitProgrammingQuestion(programmingQuestions[currentQuestionIndex].programmingSubmissionId, submittedCode[currentQuestionIndex]).then(async () => {
                         await examApis.submitExam(examSubmissionId).then(() => {
-                            Swal.fire("Submitted!", "Your exam has been submitted.", "success");
+                            Swal.fire("Submitted!", "Your exam has been submitted. \n wait for results", "success");
+                            navigate("/dashboard");
                             setIsExamStarted(false);
                         });
                     })
@@ -163,6 +196,28 @@ const ExamPage = () => {
             });
         }
     };
+
+    const handleFlagQuestion = async (index) => {
+        const question = currentSection === "MCQ" ? mcqQuestions : programmingQuestions;
+        const status = question[index].questionSubmissionStatus.questionSubmissionStatusId === 3?(selectedOptions[index]!=null?1:2):3;
+        await examApis.submitQuestionOption(
+            question[index].questionSubmissionId,
+            selectedOptions[index],
+            status
+        );
+
+        setMcqQuestions((prev) => {
+            const updatedQuestions = [...prev];
+            updatedQuestions[index] = {
+                ...updatedQuestions[index],
+                questionSubmissionStatus: {
+                    questionSubmissionStatusId: status,
+                },
+            };
+            return updatedQuestions;
+        });
+    };
+
     const questionsToDisplay =
         currentSection === "MCQ" ? mcqQuestions : programmingQuestions;
 
@@ -182,10 +237,15 @@ const ExamPage = () => {
                 <Grid templateColumns="3fr 1fr" gap={6}>
                     <Box borderWidth="1px" borderRadius="lg" p={6} shadow="md">
                         <VStack spacing={4} align="stretch">
+                            <HStack spacing={4} justify="space-between">
                             <Text fontSize="lg" fontWeight="bold">
                                 Question {currentQuestionIndex + 1} of{" "}
                                 {questionsToDisplay.length}
                             </Text>
+                            {currentSection=="MCQ" && <Button fontSize="lg" fontWeight="bold" backgroundColor={"yellow.400"} toolTip="Mark this question for review" onClick={() => {handleFlagQuestion(currentQuestionIndex)}}>
+                                <Icon as={LuFlagTriangleRight} />
+                            </Button>}
+                            </HStack>
                             <PreventCopyPaste>
                                 <Text>
                                     {questionsToDisplay[currentQuestionIndex]?.questionText}
@@ -319,7 +379,6 @@ const ExamPage = () => {
                             </Text>
                             <Grid templateColumns="repeat(10, 1fr)" gap={1}>
                                 {questionsToDisplay.map((question, index) => {
-                                    const isAnswered = selectedOptions[index];
                                     const isCurrent = index === currentQuestionIndex;
                                     return (
                                         <Box
@@ -330,9 +389,11 @@ const ExamPage = () => {
                                             bg={
                                                 isCurrent
                                                     ? "blue.500"
-                                                    : isAnswered
+                                                    : question.questionSubmissionStatus.questionSubmissionStatusId === 1
                                                         ? "green.500"
-                                                        : "gray.300"
+                                                        : question.questionSubmissionStatus.questionSubmissionStatusId === 2
+                                                        ? "gray.500"
+                                                        : "yellow.500"
                                             }
                                             cursor="pointer"
                                             onClick={() => handleMapNavigation(index)}

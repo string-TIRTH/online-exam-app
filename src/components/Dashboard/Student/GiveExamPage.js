@@ -9,15 +9,32 @@ import {
 import { examApis } from "../../../services/api";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
+
 
 const GiveExamPage = () => {
   const navigate = useNavigate();
   const [examCode,setExamCode] = useState("");
 
 const handleExamCodeChange = (e) => {
+  getDeviceFingerprint();
   const value = e?.target?.value || ""; 
   setExamCode(value);
 }
+
+const getDeviceFingerprint = async () => {
+  const fp = await FingerprintJS.load();
+  const result = await fp.get({
+      excludes: {
+          userAgent: true,
+          screenResolution: true,
+          availableScreenResolution: true,
+          ip: true,
+      }
+  });
+  console.log(result.visitorId);
+  return result.visitorId;
+};
 
 const handleSubmitExamCode = () =>{
   Swal.fire({
@@ -38,7 +55,7 @@ const handleSubmitExamCode = () =>{
     confirmButtonText: "Start Exam",
   }).then(async (result) => {
     if (result.isConfirmed) {
-      const getExamStatusRes = await examApis.getExamStatus(examCode);
+      const getExamStatusRes = await examApis.getExamStatus(examCode, await getDeviceFingerprint());
         const status = getExamStatusRes.data.status;
         const code = getExamStatusRes.data.code;
         switch(code){
@@ -58,6 +75,8 @@ const handleSubmitExamCode = () =>{
             Swal.fire(status, "Invalid Code", "error");
           case 7:
             Swal.fire(status, "Exam not started yet", "error");
+          case 8:
+          Swal.fire(status, "Device Change Detected Please complete exam with same device or contact examiner", "error");
             break;
         }
     } else if (result.isDismissed) {

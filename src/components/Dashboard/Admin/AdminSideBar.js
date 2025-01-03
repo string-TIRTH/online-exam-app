@@ -8,8 +8,9 @@ import { ImConfused } from "react-icons/im";
 import { MdOutlineTypeSpecimen } from "react-icons/md";
 import { RiQuestionnaireLine } from "react-icons/ri";
 import { TbReportAnalytics } from "react-icons/tb";
-
 import { FaUsersGear } from "react-icons/fa6";
+import { CgAddR } from "react-icons/cg";
+import { BiAddToQueue } from "react-icons/bi";
 const AdminSideBar = ({ onPageSelect }) => {
     return (
         <Box
@@ -46,6 +47,15 @@ const AdminSideBar = ({ onPageSelect }) => {
                                                 <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={() => onPageSelect("AddStudent")}>
                                                     <Icon as={FaUserPlus} mr={2} />
                                                     <Text>Add</Text>
+                                                </Box>
+                                            </AccordionButton>
+                                        </AccordionItem>
+
+                                        <AccordionItem border="none">
+                                            <AccordionButton>
+                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={() => onPageSelect("AddStudentBulk")}>
+                                                    <Icon as={FaUserPlus} mr={2} />
+                                                    <Text>Add With CSV</Text>
                                                 </Box>
                                             </AccordionButton>
                                         </AccordionItem>
@@ -155,12 +165,19 @@ const AdminSideBar = ({ onPageSelect }) => {
                                         <AccordionItem border="none">
                                             <AccordionButton>
                                                 <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={() => onPageSelect("AddQuestion")}>
-                                                    <Icon as={FaUserPlus} mr={2} />
+                                                    <Icon as={CgAddR} mr={2} />
                                                     <Text>Add</Text>
                                                 </Box>
                                             </AccordionButton>
                                         </AccordionItem>
-
+                                        <AccordionItem border="none">
+                                            <AccordionButton>
+                                                <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={() => onPageSelect("AddQuestionBulk")}>
+                                                    <Icon as={BiAddToQueue} mr={2} />
+                                                    <Text>Add With CSV</Text>
+                                                </Box>
+                                            </AccordionButton>
+                                        </AccordionItem>
                                         <AccordionItem border="none">
                                             <AccordionButton>
                                                 <Box as="span" flex="1" textAlign="left" display="flex" alignItems="center" onClick={() => onPageSelect("ListQuestion")}>

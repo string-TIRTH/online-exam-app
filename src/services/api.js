@@ -9,8 +9,6 @@ const API = axios.create({
   },
 });
 
-const token = sessionStorage.getItem("token");
-
 export const login = (email, password) => API.post("/auth/login", { email, password });
 
 export const questionApis = {
@@ -19,6 +17,12 @@ export const questionApis = {
   }, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+  }),
+  createQuestionBulk : (formData) => API.post("/question/create/csv", formData, {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        "Content-Type": "multipart/form-data",
       },
   }),
   createQuestionType : (questionTypeText) => API.post("/question/createQuestionType", {
@@ -221,15 +225,15 @@ export const examApis = {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
   }),
-  getExamStatus:(examCode) => API.post("/exam/getExamStatus", {
-    examCode
+  getExamStatus:(examCode,deviceFingerprint) => API.post("/exam/getExamStatus", {
+    examCode,deviceFingerprint
   }, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
   }),
-  getExamQuestionsForExam:(examCode) => API.post("/exam/getExamQuestions", {
-    examCode
+  getExamQuestionsForExam:(examCode,deviceFingerprint) => API.post("/exam/getExamQuestions", {
+    examCode,deviceFingerprint
   }, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -301,6 +305,15 @@ export const userApis = {
   }, {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+  
+  }),
+  createStudentBulk:(formData) => API.post("/user/student/register/csv", 
+    formData
+  , {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        "Content-Type": "multipart/form-data",
       },
   
   }),

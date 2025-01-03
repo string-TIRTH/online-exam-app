@@ -140,7 +140,7 @@ const ListExamSubmission = (data) => {
                                             <Td>{result.studentName}</Td>
                                             <Td>{result.studentEmail}</Td>
                                             <Td>{result.scoredMarks }/ {totalMarks}</Td>
-                                            <Td>{result.scoredMarks }/ {totalMcqQuestions}</Td>
+                                            <Td>{result.correctMcq }/ {totalMcqQuestions}</Td>
                                             <Td>{result.correctCodeSubmission }/ {totalProgrammingQuestions}</Td>
                                             <Td>{result.completedInMinutes}</Td>
                                             <Td justifyItems={"center"}>
