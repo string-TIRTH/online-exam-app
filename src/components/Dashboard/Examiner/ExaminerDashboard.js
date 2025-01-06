@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { Flex } from "@chakra-ui/react";
 import ExaminerSideBar from "./ExaminerSideBar";
 import AddStudentPage from "../Admin/AddStudentPage";
+import AddStudentBulkPage from "../Admin/AddStudentBulkPage";
 import AddExamPage from "../Admin/AddExamPage";
 import AddCategoryPage from "../Admin/AddCategoryPage";
 import AddDifficultyPage from "../Admin/AddDifficultyPage";
 import AddQuestionPage from "../Admin/AddQuestionPage";
+import AddQuestionBulkPage from "../Admin/AddQuestionBulkPage";
+
 import AddQuestionTypePage from "../Admin/AddQuestionTypePage";
 import ListQuestionPage from "../Admin/ListQuestionPage";
 import ListStudentsPage from "../Admin/ListStudentPage";
@@ -15,6 +18,7 @@ import ListDifficultyPage from "../Admin/ListDifficultyPage";
 import ListExamsPage from "../Admin/ListExamPage"
 import ListResultsPage from "../Admin/ListResultPage";
 
+
 import ComingSoon from "../../Base/ComingSoon"
 const ExaminerDashboard = () => {
   const [selectedPage, setSelectedPage] = useState("AddStudent");
@@ -23,11 +27,15 @@ const ExaminerDashboard = () => {
     switch (selectedPage) {
       case "AddStudent":
         return <AddStudentPage />;
+      case "AddStudentBulk":
+        return <AddStudentBulkPage />;
       case "ListStudents":
         return <ListStudentsPage />;
 
       case "AddQuestion":
         return <AddQuestionPage />
+      case "AddQuestionBulk":
+        return <AddQuestionBulkPage />;
       case "ListQuestion":
         return <ListQuestionPage />;
       case "AddCategory":
